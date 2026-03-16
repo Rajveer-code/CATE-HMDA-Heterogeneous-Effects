@@ -1,0 +1,7 @@
+{
+  "trim_lo": 0.0328396248301262,
+  "trim_hi": 0.5801193125705614,
+  "mean_auc": 0.729095952890625,
+  "overlap_pct": 98.0,
+  "method": "LightGBM propensity score, 5-fold cross-fitted, 1st-99th percentile trim"
+}
