@@ -1,0 +1,8 @@
+metric,value
+Propensity score model,"LightGBM (300 trees, 5-fold cross-fitted)"
+Mean cross-validated AUC,0.7291
+PS range (full sample),"[0.0098, 0.8498]"
+Trim bounds (1st-99th pct),"[0.0328, 0.5801]"
+Sample in common support,"1,960,000 / 2,000,000 (98.0%)"
+Rows trimmed,"40,000 (2.0%)"
+Approval gap in support,15.02 pp
