@@ -1,18 +1,20 @@
-@"
+# Data files — never commit (too large, publicly available)
 data/*.csv
 data/*.parquet
 data/*.pkl
 data/processed/
 data/output/
 data/raw/
+
+# Python
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 *.pyc
+
+# OS
 .DS_Store
 Thumbs.db
-outputs/figures/*.png
-outputs/figures/*.pdf
-outputs/tables/*.csv
+
+# Model artifacts (large binary files)
 *.joblib
-"@ | Out-File -FilePath .gitignore -Encoding utf8
