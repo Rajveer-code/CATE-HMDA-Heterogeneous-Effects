@@ -1,0 +1,12 @@
+feature,display_name,mean_abs_shap
+aus_automated,Automated underwriting (AUS),3.1394099872956525
+dti_midpoint,Debt-to-income ratio,1.665810539462972
+purpose_purchase,Purchase loan,1.569549352787933
+ltv,Loan-to-value ratio,1.0287728546388848
+income,Applicant income,0.8841673620872548
+purpose_refi,Refinance loan,0.6273841444581674
+year,Application year,0.330212265748375
+aus_exempt,Manual/exempt underwriting,0.30915275020339517
+lender_large,Large lender,0.23463985077022553
+post_tightening,Post-2022 tightening,0.21965980085216633
+lender_small,Small lender,0.0008941223407648472
