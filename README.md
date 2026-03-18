@@ -143,6 +143,17 @@ python -m ipykernel install --user --name cate_hmda --display-name "CATE-HMDA"
 
 ---
 
+## Key Results
+
+### CATE Distribution — The average hides everything
+![CATE Distribution](outputs/figures/nb21_cate_distribution.png)
+
+### SHAP Attribution — What drives heterogeneity
+![SHAP Attribution](outputs/figures/nb22_shap_beeswarm.png)
+
+### Subgroup Analysis
+![Subgroup CATE](outputs/figures/nb21_cate_by_subgroup.png)
+
 ## References
 
 - Wager, S., & Athey, S. (2018). Estimation and inference of heterogeneous treatment effects using random forests. *Journal of the American Statistical Association*, 113(523), 1228–1242.
