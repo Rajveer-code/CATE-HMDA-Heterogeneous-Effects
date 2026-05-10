@@ -1,0 +1,2 @@
+test,cutoff,density_below,density_above,log_ratio,se,t_stat,p_value,n_below_bw,n_above_bw,no_manipulation
+McCrary (2008) density test at LTV=80%,80.0,0.043165,0.048742,0.1215,0.0182,6.667,0.0,300541,235321,False
