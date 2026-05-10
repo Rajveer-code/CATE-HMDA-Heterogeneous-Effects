@@ -385,7 +385,11 @@ add_para(doc,
     "where the primary applicant is identified as White non-Hispanic or Black or African-American. "
     "We exclude government-backed loan types (FHA, VA, USDA) that operate under separate "
     "underwriting standards, focusing on conventional conforming and non-conforming mortgages where "
-    "lender discretion is greatest. After these restrictions, the analysis sample contains "
+    "lender discretion is greatest. Importantly, government-backed programs disproportionately "
+    "serve Black applicants (approximately 40% of Black purchase applications vs. 10% of White "
+    "purchase applications in the full HMDA universe); this restriction means our estimates apply "
+    "to conventional mortgage lending specifically and may understate the overall racial approval "
+    "gap across all loan types. After these restrictions, the analysis sample contains "
     "42,296,010 applications, of which 4,993,671 (11.8%) are Black applicants and 37,302,339 "
     "(88.2%) are White applicants.",
     indent=True)
@@ -682,13 +686,15 @@ key_sg_table = [
     'Automated AUS', 'Manual/exempt AUS',
     'LTV <= 80%', 'LTV > 80%',
     'Purchase loans', 'Refinance loans',
-    'Income Q1', 'Income Q3', 'Income Q5',
+    'Income Q1', 'Income Q2', 'Income Q3', 'Income Q4', 'Income Q5',
     'Low DTI (<43%)', 'High DTI (>=43%)',
     'Large lenders', 'Small lenders',
     'Pre-2022', 'Post-2022',
 ]
 sub_tab = subgrp[subgrp['subgroup'].isin(key_sg_table)].copy()
-sub_tab = sub_tab.set_index('subgroup').reindex([s for s in key_sg_table if s in sub_tab.index]).reset_index()
+# BUG FIX: evaluate index AFTER set_index (Python evaluates list comprehension before assignment)
+sub_tab = sub_tab.set_index('subgroup')
+sub_tab = sub_tab.reindex([s for s in key_sg_table if s in sub_tab.index]).reset_index()
 
 table3 = doc.add_table(rows=1, cols=6)
 table3.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -888,6 +894,15 @@ add_para(doc,
     "independently identifying — the racial approval differential.",
     indent=True)
 
+add_para(doc,
+    "Because bunching is present at the threshold (McCrary t = 6.67; p < 0.001) and several "
+    "covariates — DTI, log income, and loan purpose — are discontinuous at LTV = 80% "
+    "(p < 0.001 for all three), the RDD does not satisfy the conditions for clean causal "
+    "identification. We treat these estimates as suggestive corroborating evidence of "
+    "differential lender standards near a salient risk boundary, not as an independent causal "
+    "estimate of the racial penalty.",
+    indent=True)
+
 add_figure(doc, FIGS_DIR / 'fig6_rdd_diagnostics.png',
            'Figure 8: RDD Diagnostics at LTV=80%.\n'
            'Panel (a): main estimates by loan type. Panel (b): bandwidth sensitivity (stable at narrow BW). '
@@ -901,6 +916,15 @@ doc.add_page_break()
 # 7. DIFFERENCE-IN-DIFFERENCES ANALYSIS
 # ═══════════════════════════════════════════════════════════════════
 add_heading(doc, '7. Difference-in-Differences: Post-2022 Credit Tightening', level=1)
+
+add_para(doc,
+    "We present the following DiD estimates as descriptive evidence of temporal dynamics only, "
+    "not as causal estimates. The pre-trend test reveals a statistically significant downward "
+    "trend in the racial approval gap from 2020 to 2021 (Δgap = −1.49 pp; t = −6.74; "
+    "p < 0.001), violating the parallel trends assumption required for causal identification. "
+    "These results should not be interpreted as causal estimates of the effect of credit "
+    "tightening on racial disparities.",
+    indent=True)
 
 add_para(doc,
     "The Federal Reserve's rate hike cycle that began in March 2022 produced the fastest increase "
@@ -1142,10 +1166,13 @@ add_para(doc,
     indent=True)
 
 add_para(doc,
-    "These findings are corroborated by three independent pieces of evidence: an RDD at the 80% "
-    "LTV threshold showing a 1.81 pp discontinuity in the racial gap, a DiD analysis showing that "
-    "the most-penalised applicants bore the brunt of post-2022 credit tightening, and a DR-Learner "
-    "estimator yielding a virtually identical ATE of −9.24 pp. Race-shuffle placebo tests confirm "
+    "These findings are corroborated by two quasi-experimental designs and one replication "
+    "estimator: an RDD at the 80% LTV threshold showing a 1.81 pp discontinuity in the racial "
+    "gap (corroborating; causal validity limited by threshold bunching), a descriptive DiD "
+    "analysis documenting temporal dynamics in the gap with the most-penalised applicants "
+    "bearing the brunt of post-2022 credit tightening (parallel trends assumption violated — "
+    "descriptive estimates only), and a DR-Learner estimator yielding a virtually identical "
+    "ATE of −9.24 pp. Race-shuffle placebo tests confirm "
     "17-fold genuine treatment effect heterogeneity. Oster (2019) bounds yield δ = 6.87 (at "
     "Oster's recommended R²_max = 0.201), meaning unobservables would need to be nearly "
     "seven times as explanatory as the entire 33-feature control set to nullify the finding. "

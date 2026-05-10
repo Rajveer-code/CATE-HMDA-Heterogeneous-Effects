@@ -44,8 +44,11 @@ MASTER_CLAUDE_CODE_PROMPT.md
 
 # Manuscript working files (keep only the final DOCX)
 manuscript/docx_unpacked/
+manuscript/docx_audit/
 manuscript/*.bak
 manuscript/scripts/
+manuscript/~$*.docx
+manuscript/CATE_HMDA_Final_Submission.docx
 
 # Temp scripts
 scripts/tmp_*.py
