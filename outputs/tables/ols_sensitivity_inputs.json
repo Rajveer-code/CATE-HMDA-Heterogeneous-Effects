@@ -1,0 +1,23 @@
+{
+  "beta_uncontrolled": -0.14707842783529482,
+  "r2_uncontrolled": 0.012914733453979754,
+  "t_stat_uncontrolled": -68.09064484657378,
+  "se_uncontrolled": 0.002160038697925411,
+  "beta_controlled": -0.10181035897880097,
+  "r2_controlled": 0.15441806929821345,
+  "t_stat_controlled": -50.74759673148434,
+  "se_controlled": 0.002006210452043668,
+  "t_stat_aus": 45.40838819533926,
+  "partial_r2": {
+    "dti_midpoint": 0.005061988467033009,
+    "ltv": 0.000412317046372703,
+    "log_income": 0.0008292818783384885,
+    "purpose_purchase": 0.007937118590984444,
+    "lender_large": 0.00011716273289528652,
+    "aus_automated": 0.004107144430768612,
+    "income": 2.448519643922553e-08,
+    "log_loan_amount": 9.94617555996396e-05
+  },
+  "n_obs": 500000,
+  "df_resid": 499971
+}
