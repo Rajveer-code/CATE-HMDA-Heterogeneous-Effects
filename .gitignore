@@ -40,7 +40,6 @@ outputs/tables/*.csv
 # Internal planning and session files (not part of research output)
 PROJECT_CONTEXT.md
 PROJECT_PLAN.md
-MASTER_CLAUDE_CODE_PROMPT.md
 
 # Manuscript working files (keep only the final DOCX)
 manuscript/docx_unpacked/
@@ -49,8 +48,17 @@ manuscript/*.bak
 manuscript/scripts/
 manuscript/~$*.docx
 manuscript/CATE_HMDA_Final_Submission.docx
+manuscript/CATE_HMDA_Revised.docx
+
+# Working/utility scripts (not part of reproducible pipeline)
+scripts/edit_manuscript.py
+scripts/unpack_docx.py
+scripts/repack_docx.py
 
 # Temp scripts
 scripts/tmp_*.py
 scripts/find_xml_*.py
 D:/Projects/tmp_msg_filter.py
+
+# Archives
+*.zip

@@ -14,20 +14,22 @@
 
 ## Overview
 
-This repository contains the complete, reproducible codebase for a causal analysis of racial disparities in U.S. mortgage lending. Using the Home Mortgage Disclosure Act (HMDA) administrative data from 2020–2024 — encompassing 42.3 million applications — I estimate the **conditional causal effect of racial identity on mortgage approval probability** after controlling for 33 creditworthiness features including debt-to-income ratio, loan-to-value ratio, income, loan purpose, and underwriting system type.
+This repository contains the complete, reproducible codebase for a causal analysis of racial disparities in U.S. mortgage lending. Using Home Mortgage Disclosure Act (HMDA) administrative data from 2020–2024 — encompassing 42.3 million applications — I estimate the **conditional causal effect of racial identity on mortgage approval probability** after controlling for 33 creditworthiness features including debt-to-income ratio, loan-to-value ratio, income, loan purpose, and underwriting system type.
+
+The central finding is stark: a Black applicant who is identical to a White applicant on every observable financial characteristic still faces a conditional approval penalty of **9.4 percentage points**. This penalty is largest when loans pass through manual underwriting — where human judgment plays a larger role — rather than automated systems, a contrast of **8.6 pp** that points toward discretion as the mechanism amplifying racial disparities.
 
 ### Headline Results
 
 | Statistic | Value |
 |---|---|
-| **Conditional racial penalty (DML, pooled)** | **−9.38 pp** (SE = 0.071; t = −131.8) |
+| **Conditional racial penalty (DML, pooled)** | **−9.39 pp** (SE = 0.071; t = −131.8) |
 | Unconditional racial approval gap | −14.95 pp |
 | Share of gap unexplained by 33 creditworthiness features | **62.8%** |
 | CATE standard deviation | **8.47 pp** |
 | Fraction of Black applicants penalised (CATE < 0) | **90.7%** |
 | Manual vs. Automated AUS contrast | **−8.62 pp** |
-| DR-Learner replication (500K subsample) | −9.24 pp (Δ = 0.16 pp) |
-| Race-shuffle placebo signal ratio | **17×** |
+| DR-Learner replication (500K subsample) | −9.24 pp (Δ = 0.15 pp) |
+| Race-shuffle placebo signal ratio | **17.9×** |
 | Oster (2019) δ at recommended R²_max | **6.87** |
 | Cinelli-Hazlett (2020) RV₀ | **0.00512** |
 | Total observations | 42,296,010 |
@@ -53,7 +55,7 @@ This repository contains the complete, reproducible codebase for a causal analys
 
 ### Robustness
 - DR-Learner replication: −9.24 pp ✓
-- Race-shuffle placebo: 17× signal-to-noise ratio ✓
+- Race-shuffle placebo: 17.9× signal-to-noise ratio ✓
 - Oster δ = 6.87 (unobservables must be 7× stronger than observables to nullify) ✓
 - Cinelli-Hazlett RV₀ = 0.00512 (all observed covariates fall below threshold) ✓
 
@@ -102,8 +104,8 @@ This repository contains the complete, reproducible codebase for a causal analys
 CATE-HMDA-Heterogeneous-Effects/
 │
 ├── data/
-│   ├── features_panel.parquet     # 42.3M HMDA rows, 37 engineered features
-│   ├── cate_estimates.parquet     # Individual CATEs for 1.5M estimation sample
+│   ├── features_panel.parquet     # 42.3M HMDA rows, 37 engineered features (not tracked — see data/README_data.md)
+│   ├── cate_estimates.parquet     # Individual CATEs for 1.5M estimation sample (not tracked)
 │   ├── feature_sets.json          # Feature set definitions (X_FULL, X_BASE)
 │   ├── trim_bounds.json           # Propensity score trim bounds [0.033, 0.580]
 │   └── README_data.md             # Data download and preprocessing instructions
@@ -119,12 +121,14 @@ CATE-HMDA-Heterogeneous-Effects/
 │   ├── NB24_subgroup_rdd.ipynb            # RDD analysis + 4 validity diagnostics
 │   ├── NB25_subgroup_did.ipynb            # DiD & event study
 │   ├── NB26_robustness_checks.ipynb       # DR-Learner + LinearDML robustness
+│   ├── NB26_paper_figures.ipynb           # Publication figure generation (earlier draft)
 │   ├── NB27_sensitivity_analysis.ipynb    # Oster & Cinelli-Hazlett bounds
 │   └── NB28_placebo_tests.ipynb           # Race-shuffle & pseudo-treatment placebos
 │
 ├── outputs/
-│   ├── figures/     # 15+ publication-quality figures (300 DPI PNG)
-│   └── tables/      # 18 CSV result tables
+│   ├── figures/     # 20+ publication-quality figures (300 DPI PNG)
+│   ├── tables/      # 18+ CSV result tables
+│   └── paper_figures/   # Alternative figure set from NB26_paper_figures.ipynb
 │
 ├── scripts/
 │   ├── build_manuscript.py                # Rebuild DOCX manuscript from data
@@ -156,7 +160,7 @@ Run notebooks in sequence from NB17 to NB28. All notebooks use `BASE_DIR = Path(
 |----------|-------------|--------------|
 | NB17 — Feature engineering | `features_panel.parquet` (42.3M rows, 37 features) | ~45 min |
 | NB18 — Overlap diagnostics | PS model AUC = 0.729; 98% common support | ~15 min |
-| NB19 — DML baseline | Annual ATE table; pooled ATE = −9.38 pp | ~30 min |
+| NB19 — DML baseline | Annual ATE table; pooled ATE = −9.39 pp | ~30 min |
 | NB20 — PS analysis | Extended overlap diagnostics | ~10 min |
 | NB21 — Causal Forest CATE | CATE distribution; subgroup table | ~60 min |
 | NB22 — SHAP attribution | Feature importance; AUS = top predictor | ~30 min |
@@ -165,7 +169,7 @@ Run notebooks in sequence from NB17 to NB28. All notebooks use `BASE_DIR = Path(
 | NB25 — DiD | Event study; DiD = +0.99 pp | ~20 min |
 | NB26 — Robustness | DR-Learner = −9.24 pp ✓ | ~60 min |
 | NB27 — Sensitivity | Oster δ = 6.87; RV₀ = 0.00512 | ~10 min |
-| NB28 — Placebo tests | 17× signal ratio ✓ | ~60 min |
+| NB28 — Placebo tests | 17.9× signal ratio ✓ | ~60 min |
 
 Alternatively, use the direct execution scripts in `scripts/` for NB26 and NB28 which patch the base path automatically.
 
@@ -235,7 +239,7 @@ python scripts/final_verification.py
 | 2022 | 363,996 | −9.65 | 0.163 | [−9.97, −9.33] |
 | 2023 | 262,295 | −9.22 | 0.186 | [−9.58, −8.85] |
 | 2024 | 274,303 | −8.86 | 0.183 | [−9.22, −8.51] |
-| **Pooled** | **2,000,000** | **−9.38** | **0.071** | **[−9.52, −9.25]** |
+| **Pooled** | **2,000,000** | **−9.39** | **0.071** | **[−9.52, −9.25]** |
 
 ### Subgroup CATEs
 
