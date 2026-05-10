@@ -1,20 +1,38 @@
-# Data files — never commit (too large, publicly available)
-data/*.csv
+# Data (too large for GitHub — documented in README)
 data/*.parquet
-data/*.pkl
-data/processed/
-data/output/
+data/*.csv
+data/*.json
 data/raw/
+data/processed/
 
 # Python
 __pycache__/
-*.py[cod]
-.ipynb_checkpoints/
 *.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Model artifacts (large binary files)
+# Outputs (reproduced by running notebooks)
+outputs/figures/*.png
+outputs/tables/*.csv
+
+# Model artifacts
 *.joblib
+*.pkl
+
+# IDE
+.vscode/
+.idea/
