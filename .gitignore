@@ -36,3 +36,18 @@ outputs/tables/*.csv
 # IDE
 .vscode/
 .idea/
+
+# Internal planning and session files (not part of research output)
+PROJECT_CONTEXT.md
+PROJECT_PLAN.md
+MASTER_CLAUDE_CODE_PROMPT.md
+
+# Manuscript working files (keep only the final DOCX)
+manuscript/docx_unpacked/
+manuscript/*.bak
+manuscript/scripts/
+
+# Temp scripts
+scripts/tmp_*.py
+scripts/find_xml_*.py
+D:/Projects/tmp_msg_filter.py

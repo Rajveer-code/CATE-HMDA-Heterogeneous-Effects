@@ -7,52 +7,55 @@
 
 <p align="center">
   <img src="outputs/figures/fig3_cate_distribution.png" width="700" alt="CATE Distribution"/>
-  <br><em>Distribution of individual conditional average treatment effects (CATEs) — 90.7% of Black applicants face a negative racial penalty</em>
+  <br><em>Distribution of individual conditional average treatment effects — 90.7% of Black applicants face a negative racial penalty</em>
 </p>
 
 ---
 
 ## Overview
 
-This repository contains the full replication code and outputs for a causal analysis of racial disparities in U.S. mortgage lending. Using the Home Mortgage Disclosure Act (HMDA) data from 2020–2024 (42.3 million applications), I estimate the **conditional causal effect of Black race on mortgage approval probability** after controlling for 33 risk-relevant creditworthiness features.
+This repository contains the complete, reproducible codebase for a causal analysis of racial disparities in U.S. mortgage lending. Using the Home Mortgage Disclosure Act (HMDA) administrative data from 2020–2024 — encompassing 42.3 million applications — I estimate the **conditional causal effect of racial identity on mortgage approval probability** after controlling for 33 creditworthiness features including debt-to-income ratio, loan-to-value ratio, income, loan purpose, and underwriting system type.
 
-### Headline Findings
+### Headline Results
 
 | Statistic | Value |
 |---|---|
-| Conditional racial penalty (DML) | **−9.38 pp** (SE = 0.071; t = −131.8) |
-| Unconditional racial gap | −14.95 pp |
-| Fraction of gap unexplained by observables | **62.8%** |
-| CATE distribution SD | **8.47 pp** |
-| Fraction of Black applicants penalised | **90.7%** |
+| **Conditional racial penalty (DML, pooled)** | **−9.38 pp** (SE = 0.071; t = −131.8) |
+| Unconditional racial approval gap | −14.95 pp |
+| Share of gap unexplained by 33 creditworthiness features | **62.8%** |
+| CATE standard deviation | **8.47 pp** |
+| Fraction of Black applicants penalised (CATE < 0) | **90.7%** |
 | Manual vs. Automated AUS contrast | **−8.62 pp** |
-| DR-Learner replication (ATE) | −9.24 pp (0.16 pp from main) |
-| Placebo signal-to-noise ratio | **17×** |
+| DR-Learner replication (500K subsample) | −9.24 pp (Δ = 0.16 pp) |
+| Race-shuffle placebo signal ratio | **17×** |
+| Oster (2019) δ at recommended R²_max | **6.87** |
+| Cinelli-Hazlett (2020) RV₀ | **0.00512** |
 | Total observations | 42,296,010 |
 | Estimation sample | 1,500,000 (stratified) |
 
-### Core Claim
+### Core Finding
 
-> Black mortgage applicants in the U.S. face a conditional approval penalty of approximately **9.4 percentage points** relative to otherwise identical White applicants, even after controlling for all available creditworthiness information. This penalty is largest for applicants processed through **manual underwriting** (−14.79 pp) compared to automated AUS (−6.17 pp), consistent with the hypothesis that **human discretion amplifies racial disparities** beyond what algorithmic systems alone would produce.
+> Black mortgage applicants in the U.S. face a conditional approval penalty of **9.4 percentage points** relative to otherwise identical White applicants, after controlling for all available creditworthiness information. This penalty is largest for applicants processed through **manual underwriting** (−14.79 pp) versus automated systems (−6.17 pp) — a contrast of 8.62 pp — consistent with the hypothesis that **human discretion amplifies racial disparities** beyond what algorithmic systems alone produce.
 
 ---
 
 ## Methodology
 
-### Primary: Double Machine Learning (DML)
-- **Estimator:** Partially Linear DML (Chernozhukov et al., 2018)
-- **Nuisance models:** LightGBM gradient-boosted trees with 5-fold cross-fitting
+### Primary Estimator: Double Machine Learning (DML)
+- **Framework:** Partially Linear DML (Chernozhukov et al., 2018)
+- **Nuisance models:** LightGBM gradient-boosted trees, 5-fold cross-fitting
 - **CATE estimation:** CausalForestDML (Wager & Athey, 2018; Athey et al., 2019)
-- **SHAP attribution:** SHapley Additive exPlanations for CATE decomposition
+- **Feature attribution:** SHAP (Lundberg & Lee, 2017)
 
 ### Supplementary Identification
-- **RDD:** Regression discontinuity at LTV=80% (PMI threshold); discontinuity = 1.81 pp (t = 18.5)
-- **DiD:** Difference-in-differences around the 2022 Federal Reserve rate-hike tightening; overall DiD = +0.99 pp (t = 6.23)
+- **RDD:** Regression discontinuity at LTV = 80% PMI threshold → 1.81 pp discontinuity (t = 18.5)
+- **DiD:** Difference-in-differences around 2022 Federal Reserve credit tightening → +0.99 pp widening
 
 ### Robustness
-- **DR-Learner** estimator replication: −9.24 pp (0.16 pp from main ✓)
-- **Race-shuffle placebo** tests: 17× signal-to-noise ratio
-- **Oster (2019)** omitted variable bias bounds: δ > 1 across all plausible R²_max values
+- DR-Learner replication: −9.24 pp ✓
+- Race-shuffle placebo: 17× signal-to-noise ratio ✓
+- Oster δ = 6.87 (unobservables must be 7× stronger than observables to nullify) ✓
+- Cinelli-Hazlett RV₀ = 0.00512 (all observed covariates fall below threshold) ✓
 
 ---
 
@@ -60,16 +63,34 @@ This repository contains the full replication code and outputs for a causal anal
 
 <table>
 <tr>
-<td align="center"><img src="outputs/figures/fig4_subgroup_heterogeneity.png" width="380"/><br><em>Subgroup CATE Heterogeneity</em></td>
-<td align="center"><img src="outputs/figures/fig5_shap_attribution.png" width="380"/><br><em>SHAP Attribution — AUS Type Dominates</em></td>
+<td align="center">
+  <img src="outputs/figures/fig4_subgroup_heterogeneity.png" width="380"/>
+  <br><em>Subgroup CATE Heterogeneity</em>
+</td>
+<td align="center">
+  <img src="outputs/figures/fig5_shap_attribution.png" width="380"/>
+  <br><em>SHAP Attribution — AUS Type Dominates</em>
+</td>
 </tr>
 <tr>
-<td align="center"><img src="outputs/figures/fig7_event_study_did.png" width="380"/><br><em>Event Study — Gap Widened Post-2022</em></td>
-<td align="center"><img src="outputs/figures/fig8_robustness_placebo.png" width="380"/><br><em>Robustness — All Estimators Converge</em></td>
+<td align="center">
+  <img src="outputs/figures/fig2_dml_results.png" width="380"/>
+  <br><em>Annual DML Estimates, 2020–2024</em>
+</td>
+<td align="center">
+  <img src="outputs/figures/fig7_event_study_did.png" width="380"/>
+  <br><em>Event Study — Gap Widened Post-2022</em>
+</td>
 </tr>
 <tr>
-<td align="center"><img src="outputs/figures/fig1_descriptive_overview.png" width="380"/><br><em>Descriptive Overview — Race & Creditworthiness</em></td>
-<td align="center"><img src="outputs/figures/fig9_income_aus_heatmap.png" width="380"/><br><em>Income × AUS Interaction Heatmap</em></td>
+<td align="center">
+  <img src="outputs/figures/fig8_robustness_placebo.png" width="380"/>
+  <br><em>Robustness — All Estimators Converge</em>
+</td>
+<td align="center">
+  <img src="outputs/figures/fig9_income_aus_heatmap.png" width="380"/>
+  <br><em>Income × AUS Interaction Heatmap</em>
+</td>
 </tr>
 </table>
 
@@ -81,40 +102,44 @@ This repository contains the full replication code and outputs for a causal anal
 CATE-HMDA-Heterogeneous-Effects/
 │
 ├── data/
-│   ├── features_panel.parquet    # 42.3M HMDA rows, 37 features
-│   ├── cate_estimates.parquet    # Individual CATEs for 1.5M sample
-│   ├── feature_sets.json         # Feature set definitions
-│   ├── trim_bounds.json          # Propensity trim bounds [0.033, 0.580]
-│   └── README_data.md            # Data acquisition instructions
+│   ├── features_panel.parquet     # 42.3M HMDA rows, 37 engineered features
+│   ├── cate_estimates.parquet     # Individual CATEs for 1.5M estimation sample
+│   ├── feature_sets.json          # Feature set definitions (X_FULL, X_BASE)
+│   ├── trim_bounds.json           # Propensity score trim bounds [0.033, 0.580]
+│   └── README_data.md             # Data download and preprocessing instructions
 │
-├── notebooks/                    # NB17–NB28, in execution order
-│   ├── NB17_feature_engineering.ipynb    # Feature construction (42M rows)
-│   ├── NB18_overlap_diagnostics.ipynb    # Overlap & propensity diagnostics
-│   ├── NB19_double_ml_baseline.ipynb     # DML ATE estimation
-│   ├── NB21_causal_forest_cate.ipynb     # CATE estimation & subgroup analysis
-│   ├── NB22_shap_attribution.ipynb       # SHAP feature decomposition
-│   ├── NB23_disparity_map.ipynb          # Personalised disparity mapping
-│   ├── NB24_subgroup_rdd.ipynb           # RDD analysis with diagnostics
-│   ├── NB25_subgroup_did.ipynb           # DiD & event study
-│   ├── NB26_robustness_checks.ipynb      # DR-Learner + LinearDML robustness
-│   ├── NB27_sensitivity_analysis.ipynb   # Oster/Cinelli-Hazlett bounds
-│   └── NB28_placebo_tests.ipynb          # Race-shuffle & pseudo-treatment placebos
+├── notebooks/
+│   ├── NB17_feature_engineering.ipynb     # Feature construction (42M rows)
+│   ├── NB18_overlap_diagnostics.ipynb     # Propensity score & overlap diagnostics
+│   ├── NB19_double_ml_baseline.ipynb      # DML ATE estimation
+│   ├── NB20_propensity_analysis.ipynb     # Extended PS analysis
+│   ├── NB21_causal_forest_cate.ipynb      # CATE estimation & subgroup analysis
+│   ├── NB22_shap_attribution.ipynb        # SHAP feature decomposition
+│   ├── NB23_disparity_map.ipynb           # Personalised disparity mapping
+│   ├── NB24_subgroup_rdd.ipynb            # RDD analysis + 4 validity diagnostics
+│   ├── NB25_subgroup_did.ipynb            # DiD & event study
+│   ├── NB26_robustness_checks.ipynb       # DR-Learner + LinearDML robustness
+│   ├── NB27_sensitivity_analysis.ipynb    # Oster & Cinelli-Hazlett bounds
+│   └── NB28_placebo_tests.ipynb           # Race-shuffle & pseudo-treatment placebos
 │
 ├── outputs/
-│   ├── figures/    # 15+ publication figures (300 DPI PNG)
-│   └── tables/     # 16 CSV result tables
+│   ├── figures/     # 15+ publication-quality figures (300 DPI PNG)
+│   └── tables/      # 18 CSV result tables
 │
 ├── scripts/
-│   ├── build_manuscript.py                # Build DOCX manuscript with all figures
-│   ├── generate_publication_figures.py    # Generate 11 publication figures
-│   ├── generate_all_missing_outputs.py    # Fill gaps (RDD diagnostics, balance)
-│   ├── generate_balance_table.py          # Covariate balance table
+│   ├── build_manuscript.py                # Rebuild DOCX manuscript from data
+│   ├── generate_publication_figures.py    # Generate all 11 paper figures
+│   ├── generate_all_missing_outputs.py    # RDD diagnostics, balance table, aliases
+│   ├── generate_balance_table.py          # Covariate balance CSV
+│   ├── run_ols_for_nb27.py                # OLS regressions for sensitivity bounds
+│   ├── run_nb27_real.py                   # Sensitivity figures with real values
+│   ├── run_nb26_direct.py                 # NB26 direct execution script
+│   ├── run_nb28_direct.py                 # NB28 direct execution script
 │   ├── resave_figures_300dpi.py           # Verify 300 DPI compliance
-│   └── final_verification.py              # 42-item checklist
+│   └── final_verification.py              # 42-item submission checklist
 │
 ├── manuscript/
-│   ├── CATE_HMDA_Final.docx     # Complete submission-ready manuscript (3.7 MB)
-│   └── CATE_HMDA_Revised.docx   # Annotated working manuscript
+│   └── CATE_HMDA_Final.docx     # Submission-ready manuscript (3.9 MB)
 │
 ├── README.md
 ├── environment.yml    # Conda environment specification
@@ -125,68 +150,75 @@ CATE-HMDA-Heterogeneous-Effects/
 
 ## Notebook Execution Order
 
-| Step | Notebook | Key Outputs | Est. Runtime |
-|------|----------|-------------|--------------|
-| 1 | NB17 | `features_panel.parquet` (42M rows) | ~45 min |
-| 2 | NB18 | Overlap plots, PS model AUC = 0.729 | ~15 min |
-| 3 | NB19 | DML ATE = −9.38 pp, annual table | ~30 min |
-| 4 | NB21 | CATE distribution, subgroup table | ~60 min |
-| 5 | NB22 | SHAP values, AUS = top predictor | ~30 min |
-| 6 | NB23 | Disparity maps (income × AUS) | ~20 min |
-| 7 | NB24 | RDD = 1.81 pp + 4 diagnostics | ~20 min |
-| 8 | NB25 | DiD = +0.99 pp, event study | ~20 min |
-| 9 | NB26 | DR-Learner = −9.24 pp ✓ | ~60 min |
-| 10 | NB28 | Placebo tests, 17× signal ratio | ~60 min |
-| — | NB27 | Sensitivity bounds† | ~5 min |
+Run notebooks in sequence from NB17 to NB28. All notebooks use `BASE_DIR = Path('D:/Projects/CATE-HMDA-Heterogeneous-Effects')` — update this path to match your local setup.
 
-*†NB27 requires manual entry of OLS values from NB19 before execution.*
+| Notebook | Key Outputs | Est. Runtime |
+|----------|-------------|--------------|
+| NB17 — Feature engineering | `features_panel.parquet` (42.3M rows, 37 features) | ~45 min |
+| NB18 — Overlap diagnostics | PS model AUC = 0.729; 98% common support | ~15 min |
+| NB19 — DML baseline | Annual ATE table; pooled ATE = −9.38 pp | ~30 min |
+| NB20 — PS analysis | Extended overlap diagnostics | ~10 min |
+| NB21 — Causal Forest CATE | CATE distribution; subgroup table | ~60 min |
+| NB22 — SHAP attribution | Feature importance; AUS = top predictor | ~30 min |
+| NB23 — Disparity maps | Income × AUS interaction maps | ~20 min |
+| NB24 — RDD | Discontinuity 1.81 pp + 4 diagnostics | ~20 min |
+| NB25 — DiD | Event study; DiD = +0.99 pp | ~20 min |
+| NB26 — Robustness | DR-Learner = −9.24 pp ✓ | ~60 min |
+| NB27 — Sensitivity | Oster δ = 6.87; RV₀ = 0.00512 | ~10 min |
+| NB28 — Placebo tests | 17× signal ratio ✓ | ~60 min |
+
+Alternatively, use the direct execution scripts in `scripts/` for NB26 and NB28 which patch the base path automatically.
 
 ---
 
-## Data Acquisition
+## Data
 
-HMDA data is publicly available from the **Consumer Financial Protection Bureau (CFPB)**:
-- URL: https://www.consumerfinance.gov/data-research/hmda/
-- Years: 2020, 2021, 2022, 2023, 2024
-- Format: CSV, ~2–5 GB per year
+HMDA loan application data is publicly available from the **Consumer Financial Protection Bureau**:
 
-See [`data/README_data.md`](data/README_data.md) for full instructions on downloading, merging, and preprocessing raw files into `features_panel.parquet`.
+- **Source:** https://www.consumerfinance.gov/data-research/hmda/
+- **Years:** 2020, 2021, 2022, 2023, 2024
+- **Format:** CSV (~2–5 GB per year)
+
+See [`data/README_data.md`](data/README_data.md) for full instructions on downloading, filtering, and merging the raw HMDA files into `features_panel.parquet`.
 
 ---
 
 ## Environment Setup
 
 ```bash
-# Clone repository
+# Clone
 git clone https://github.com/Rajveer-code/CATE-HMDA-Heterogeneous-Effects.git
 cd CATE-HMDA-Heterogeneous-Effects
 
 # Create conda environment
 conda env create -f environment.yml
 conda activate cate-hmda
-
-# Or install directly with pip
-pip install pandas numpy polars lightgbm econml scikit-learn \
-            matplotlib seaborn python-docx shap statsmodels
 ```
 
-**Key dependencies:** Python 3.11 · EconML 0.15+ · LightGBM 4.x · Polars 0.20+ · python-docx 1.1+
+**Key dependencies:** Python 3.11 · EconML 0.15+ · LightGBM 4.x · Polars 0.20+ · statsmodels · python-docx
 
 ---
 
-## Reproduce the Full Analysis
+## Reproduce Results
 
 ```bash
-# Generate all outputs (balance table, RDD diagnostics, figure aliases)
+# 1. Generate RDD diagnostics, covariate balance, and figure aliases
 python scripts/generate_all_missing_outputs.py
 
-# Generate 11 publication-quality figures
+# 2. Compute OLS statistics for sensitivity bounds
+python scripts/run_ols_for_nb27.py
+
+# 3. Generate sensitivity figures (Oster δ, Cinelli-Hazlett)
+python scripts/run_nb27_real.py
+
+# 4. Generate all 11 publication figures
 python scripts/generate_publication_figures.py
 
-# Build the submission-ready manuscript (DOCX with all figures embedded)
+# 5. Rebuild the manuscript DOCX with all figures embedded
 python scripts/build_manuscript.py
+# → manuscript/CATE_HMDA_Final.docx
 
-# Run 42-item verification checklist
+# 6. Run 42-item submission checklist
 python scripts/final_verification.py
 ```
 
@@ -194,7 +226,7 @@ python scripts/final_verification.py
 
 ## Key Quantitative Results
 
-### Annual DML Estimates — Racial Approval Penalty
+### Annual DML Estimates
 
 | Year | N (total) | DML Penalty (pp) | SE | 95% CI |
 |------|-----------|------------------|----|--------|
@@ -205,26 +237,38 @@ python scripts/final_verification.py
 | 2024 | 274,303 | −8.86 | 0.183 | [−9.22, −8.51] |
 | **Pooled** | **2,000,000** | **−9.38** | **0.071** | **[−9.52, −9.25]** |
 
-### Subgroup CATE Estimates
+### Subgroup CATEs
 
-| Subgroup | Mean CATE (pp) | % Penalised |
-|---------|---------------|-------------|
-| Automated AUS | −6.17 | 87.8% |
-| **Manual/Exempt AUS** | **−14.79** | **96.5%** |
-| LTV ≤ 80% | −10.67 | 92.0% |
-| LTV > 80% | −6.47 | 88.5% |
-| Purchase loans | −6.07 | 86.5% |
-| Refinance loans | −9.70 | 92.1% |
-| Income Q1 (< $60K) | −9.52 | 91.8% |
-| Income Q5 (> $180K) | −8.56 | 86.8% |
-| High DTI (≥43%) | −10.23 | 93.3% |
-| Low DTI (< 43%) | −8.50 | 89.4% |
+| Subgroup | Mean CATE (pp) | 95% CI | % Penalised |
+|---------|---------------|--------|-------------|
+| Automated AUS | −6.17 | [−6.18, −6.15] | 87.8% |
+| **Manual/Exempt AUS** | **−14.79** | [−14.82, −14.77] | **96.5%** |
+| LTV ≤ 80% | −10.67 | [−10.69, −10.65] | 92.0% |
+| LTV > 80% | −6.47 | [−6.49, −6.45] | 88.5% |
+| Purchase loans | −6.07 | [−6.08, −6.05] | 86.5% |
+| Refinance loans | −9.70 | [−9.72, −9.68] | 92.1% |
+| High DTI (≥43%) | −10.23 | [−10.26, −10.21] | 93.3% |
+| Income Q1 (<$60K) | −9.52 | [−9.55, −9.50] | 91.8% |
+| Income Q5 (>$180K) | −8.56 | [−8.59, −8.52] | 86.8% |
+
+---
+
+## Literature Context
+
+This paper contributes to and extends the following body of work:
+
+| Paper | Venue | Key Finding |
+|-------|-------|-------------|
+| Bartlett, Morse, Stanton & Wallace (2022) | *J. Financial Economics* | FinTech lenders charge Black/Hispanic borrowers 7.9 bps more |
+| Bhutta, Hizmo & Ringo (2025) | *J. Finance* | 1–2 pp residual denial gap; most explained by observables |
+| Fuster, Goldsmith-Pinkham, Ramadorai & Walther (2022) | *J. Finance* | ML widens within-group racial pricing disparities |
+| Chernozhukov et al. (2018) | *Econometrics Journal* | Double/debiased machine learning |
+| Wager & Athey (2018) | *JASA* | Causal forests for heterogeneous effects |
+| Oster (2019) | *J. Business & Economic Statistics* | Omitted variable bias bounds |
 
 ---
 
 ## Citation
-
-If you use this work in your research, please cite:
 
 ```bibtex
 @article{pall2026whobearstheburden,
@@ -232,22 +276,10 @@ If you use this work in your research, please cite:
              in U.S. Mortgage Lending},
   author  = {Pall, Rajveer Singh},
   year    = {2026},
-  note    = {Working paper, Gyan Ganga Institute of Technology and Sciences.
+  note    = {Working paper. Gyan Ganga Institute of Technology and Sciences.
              Available: https://github.com/Rajveer-code/CATE-HMDA-Heterogeneous-Effects}
 }
 ```
-
----
-
-## Related Literature
-
-This paper contributes to a growing body of work on racial disparities in credit markets:
-
-- **Bartlett et al. (2022)** — *Journal of Financial Economics* — FinTech lenders charge Black/Hispanic borrowers 7.9 bps more (pricing discrimination)
-- **Bhutta, Hizmo & Ringo (2025)** — *Journal of Finance* — 1–2 pp residual denial gap; observable factors explain most of the gap
-- **Fuster et al. (2022)** — *Journal of Finance* — ML algorithms widen within-group racial pricing disparities
-- **Wager & Athey (2018)** — *JASA* — Causal forests: estimation and inference of heterogeneous effects
-- **Chernozhukov et al. (2018)** — *Econometrics Journal* — Double/debiased machine learning
 
 ---
 
@@ -256,7 +288,7 @@ This paper contributes to a growing body of work on racial disparities in credit
 **Rajveer Singh Pall**  
 Gyan Ganga Institute of Technology and Sciences, Jabalpur, India  
 📧 rajveerpall04@gmail.com  
-🔗 [GitHub: Rajveer-code](https://github.com/Rajveer-code)
+🔗 [github.com/Rajveer-code](https://github.com/Rajveer-code)
 
 ---
 
@@ -266,4 +298,4 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-*Working paper — May 2026 · Comments and feedback welcome*
+*Working paper · May 2026*
