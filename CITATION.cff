@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Who Bears the Burden? Heterogeneous Racial Approval Differentials in U.S. Mortgage Lending: Evidence from Causal Forest Double Machine Learning on 42 Million HMDA Applications, 2020–2024"
+type: software
+authors:
+  - family-names: Pall
+    given-names: "Rajveer Singh"
+    orcid: "https://orcid.org/0009-0001-6762-6134"
+license: MIT
+repository-code: "https://github.com/Rajveer-code/CATE-HMDA-Heterogeneous-Effects"
+identifiers:
+  - type: other
+    value: "SSRN:6984959"
+    description: "SSRN preprint"
