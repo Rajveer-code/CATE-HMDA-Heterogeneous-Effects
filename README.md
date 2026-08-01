@@ -4,6 +4,7 @@
 **Evidence from Causal Forest Double Machine Learning on 42 Million HMDA Applications, 2020–2024**
 
 **Status:** Under review — *Journal of Financial Services Research* (Springer)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21739573.svg)](https://doi.org/10.5281/zenodo.21739573)
 
 ---
 
