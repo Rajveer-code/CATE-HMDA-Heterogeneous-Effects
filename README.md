@@ -3,7 +3,13 @@
 
 **Evidence from Causal Forest Double Machine Learning on 42 Million HMDA Applications, 2020–2024**
 
-**Status:** Under review — *Journal of Financial Services Research* (Springer)
+> [!WARNING]
+> **Correction (October 2026). This repository is archived, and its headline claims should not be cited.**
+> The manuscript was rejected by the *Journal of Financial Services Research* in August 2026. Checked against the CFPB's public LAR field definitions, the referee's two data objections are correct:
+> 1. Public HMDA does **not** report a credit-score range. `applicant_credit_score_type` (codes 1–8) records *which scoring model* was used, not the applicant's score. The analysis below treats it as an ordinal credit-score control, which it is not.
+> 2. Public HMDA has **no manual-underwriting indicator**. AUS code 6 means "not applicable", 7 "internal proprietary system", and 1111 "exempt". The manual-versus-automated contrast reported below therefore does not measure human discretion.
+>
+> The code is kept for transparency. The supported analysis of the same data is in [`hmda-racial-disparities`](https://github.com/Rajveer-code/hmda-racial-disparities).
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21739573.svg)](https://doi.org/10.5281/zenodo.21739573)
 
 ---
